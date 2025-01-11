@@ -1,21 +1,16 @@
 ---
 import type { PokemonListResponse } from "../interfaces";
+import PokemonCard from "./pokemons/PokemonCard.astro";
 
+//const resp = await fetch("http://localhost:3000/api/v2/pokemon");
 const resp = await fetch("http://localhost:3000/api/v2/pokemon");
 const data = (await resp.json()) as PokemonListResponse;
-console.log("data", data);
 ---
 
 <div id="container">
     <h1 class="text-3xl">Listado de Pókemons</h1>
     <section aria-label="Listado de Pokemóns" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {
-            data.results.map((pokemon) => (
-                <div class="bg-white shadow-md rounded p-4">
-                    <h2 class="text-xl font-bold">{pokemon.name}</h2>
-                </div>
-            ))
-        }
+        {data.results.map((pokemon) => <PokemonCard url={pokemon.url} name={pokemon.name} />)}
     </section>
     <!-- <ul>
         {data.results.map((pokemon) => <li>{pokemon.name}</li>)}

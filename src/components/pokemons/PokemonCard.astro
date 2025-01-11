@@ -1,5 +1,22 @@
-<div class="">
-    <div class="bg-white shadow-md rounded p-4">
-        <h2 class="text-xl font-bold">{pokemon.name}</h2>
-    </div>
-</div>
+---
+import type { PokemonResponse } from "../../interfaces";
+
+interface Props {
+    url: string;
+    name: string;
+}
+
+const { url, name } = Astro.props;
+
+const id = url.split("/").slice(-2)[0];
+const resp = await fetch(`http://localhost:3000/api/v2/pokemon/${id}`);
+//const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+const pokemon = (await resp.json()) as PokemonResponse;
+const imageSrc = pokemon.sprites?.other?.["official-artwork"]?.front_default;
+---
+
+<a href={`/pokemons/${name}`} class="rounded border flex flex-col justify-center items-center p-2">
+    <img src={imageSrc} alt={name} />
+    <span class="capitalize">{name}</span>
+</a>
+<!-- https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png -->
