@@ -1,0 +1,55 @@
+---
+import type { GetStaticPaths } from "astro";
+import PokemonCard from "../../components/pokemons/PokemonCard.astro";
+import type { PokemonListResponse } from "../../interfaces";
+import Layout from "../../layouts/Layout.astro";
+import Title from "@components/shared/Title.astro";
+
+
+const title = 'Pokemon Static | Home';
+
+export const getStaticPaths = (async({paginate}) => {
+
+	const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+	const {results} = (await resp.json()) as PokemonListResponse;
+
+    return paginate(results,{
+		pageSize: 20,
+	});
+
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const {data:results, currentPage, url} = page
+
+// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
+// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+---
+
+<Layout title={title}>
+	<div id="container">
+		<Title>Listado Paginado</Title>
+		<section aria-label="Listado de Pokemóns" class="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-5 gap-4 mt-5">
+			{results.map((pokemon) => <PokemonCard url={pokemon.url} name={pokemon.name} />)}
+		</section>
+
+		<section class="flex px-10 mt-10 gap-2 items-center">
+			<a href={url.prev} class:list={['btn', {'disabled':(!url.prev)}]}>Anteriores</a>
+			<span class="border px-3 py-1 mx-2">{currentPage}</span>
+			<a href={url.next} class:list={['btn', {'disabled':(!url.next)}]}>Siguientes</a>
+		</section>
+		<!-- <ul>
+			{data.results.map((pokemon) => <li>{pokemon.name}</li>)}
+		</ul> -->
+	</div>
+</Layout>
+
+
+<style>
+	.btn {
+		@apply bg-blue-500 text-white p-2 rounded-md;
+	}
+	.disabled {
+		@apply bg-gray-600 text-gray-400;
+	}
+</style>

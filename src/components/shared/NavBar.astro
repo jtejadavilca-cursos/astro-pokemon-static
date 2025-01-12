@@ -1,0 +1,45 @@
+---
+
+const links = [
+    { name: 'Listado', href: '/' },
+    { name: 'Paginado', href: '/pokemons/1' },
+    { name: 'Favoritos', href: '/favorites' },
+]
+
+const currentPath = Astro.url.pathname;
+---
+
+<!-- component -->
+<nav class="shadow bg-slate-800">
+    <div class="container flex items-center justify-center p-6 mx-auto capitalize text-gray-300">
+        <!-- {
+            links.map(({name, href}) => (
+                <a href={href} class:list={["text-gray-200 border-b-2 mx-1.5 sm:mx-6",{
+                    'border-transparent hover:text-gray-200 hover:border-blue-500': href !== currentPath,
+                    'border-blue-500': href === currentPath
+                }]}>{name}</a>
+        ))
+        } -->
+
+        {
+            links.map(({name, href}) => (
+                <div>
+                    <a href={href} class="text-gray-200 mx-1.5 sm:mx-6">{name}</a>
+
+                    {
+                        href === currentPath ? (
+                            <div transition:name="menu-line" class="border-b-2 border-blue-500 mx-4"></div>
+                        ) : (
+                        <div class="border-b-2 border-transparent"></div>
+                        )
+                    }
+                </div>
+        ))
+        }
+    </div>
+</nav>
+<!-- <a href="/" class="text-gray-200 border-b-2 border-blue-500 mx-1.5 sm:mx-6">Listado</a>
+
+        <a href="/pokemons/1" class="border-b-2 border-transparent hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6">Paginado</a>
+
+        <a href="/favorites" class="border-b-2 border-transparent hover:text-gray-200 hover:border-blue-500 mx-1.5 sm:mx-6">Favoritos</a> -->
